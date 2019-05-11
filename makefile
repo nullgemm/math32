@@ -1,6 +1,7 @@
 CC = gcc
 FLAGS = -std=c99 -pedantic -g
 FLAGS+= -Wall -Wno-unused-parameter -Wno-implicit-fallthrough -Wextra -Werror=vla -Werror
+LINK = -lm
 VALGRIND = --show-leak-kinds=all --track-origins=yes --leak-check=full
 CMD = ./$(NAME)
 
