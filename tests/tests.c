@@ -4,7 +4,11 @@
 #include "testoasterror.h"
 #include "math32.h"
 #include <math.h>
-#include <stdio.h>
+
+int64_t abs64(int64_t x)
+{
+	return (x < 0) ? -x : x;
+}
 
 // does not test full zeroes
 void test_zeros(struct testoasterror* test)
@@ -100,21 +104,36 @@ void test_icbrt(struct testoasterror* test)
 	testoasterror(test, 1);
 }
 
-// very limited test
+// tests everything
 void test_ipow(struct testoasterror* test)
 {
-	uint8_t num = 0;
+	int32_t num = 0xFFFFFFF;
+	int32_t max = num;
+	uint8_t exp;
+
+	int64_t real;
 
 	do
 	{
-		if (ipow(3, num) != floor(pow(3, num)))
+		exp = 0;
+		real = floor(pow(num, exp));
+
+		do
 		{
-			testoasterror_fail(test);
+			if (ipow(num, exp) != real)
+			{
+				testoasterror_fail(test);
+			}
+
+			++exp;
+
+			real = floor(pow(num, exp));
 		}
+		while ((abs64(real) < 0x7FFFFFFF) && (exp != 0));
 
 		++num;
 	}
-	while(num < 20);
+	while(num > max);
 
 	testoasterror(test, 1);
 }
