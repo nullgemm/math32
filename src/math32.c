@@ -225,3 +225,118 @@ int32_t ipow(int32_t base, uint8_t exp)
 		}
 	}
 }
+
+uint32_t iatan2(int32_t x, int32_t y)
+{
+	uint8_t tempdegree;
+	uint8_t octant = 0;
+	uint8_t comp = 0;
+
+	uint32_t degree;
+	uint32_t ux;
+	uint32_t uy;
+
+	// prepare x
+	if (x < 0)
+	{
+		octant |= 0x01;
+		x = -x;
+	}
+
+	ux = x;
+
+	// prepare y
+	if (y < 0)
+	{
+		octant |= 0x02;
+		y = -y;
+	}
+
+	uy = y;
+
+	// atan2 approximation
+	if (ux > uy)
+	{
+		degree = (uy * 45) / ux;
+		octant |= 0x04;
+	}
+	else
+	{
+		degree = (ux * 45) / uy;
+	}
+
+	tempdegree = degree;
+
+	if (tempdegree > 22)
+	{
+		if (tempdegree <= 44)
+		{
+			comp++;
+		}
+
+		if (tempdegree <= 41)
+		{
+			comp++;
+		}
+
+		if (tempdegree <= 37)
+		{
+			comp++;
+		}
+
+		if (tempdegree <= 32)
+		{
+			comp++;
+		}
+	}
+	else
+	{
+		if (tempdegree >= 2)
+		{
+			comp++;
+		}
+
+		if (tempdegree >= 6)
+		{
+			comp++;
+		}
+
+		if (tempdegree >= 10)
+		{
+			comp++;
+		}
+
+		if (tempdegree >= 15)
+		{
+			comp++;
+		}
+	}
+
+	degree += comp;
+
+	if (octant & 0x04)
+	{
+		degree = 90 - degree;
+	}
+
+	if (octant & 0x02)
+	{
+		if (octant & 0x01)
+		{
+			degree = 180 + degree;
+		}
+		else
+		{
+			degree = 180 - degree;
+		}
+	}
+	else
+	{
+		if (octant & 0x01)
+		{
+			degree = (360 - degree);
+		}
+	}
+
+	return degree;
+}

@@ -16,5 +16,6 @@ int32_t icbrt(uint32_t x);
 // seems to work as intended
 // but check the number limits!
 int32_t ipow(int32_t base, uint8_t exp);
+uint32_t iatan2(int32_t x, int32_t y);
 
 #endif
