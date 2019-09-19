@@ -5,6 +5,8 @@
 #include "math32.h"
 #include <math.h>
 
+#define M_PI 3.14159265358979323846
+
 int64_t abs64(int64_t x)
 {
 	return (x < 0) ? -x : x;
@@ -134,6 +136,36 @@ void test_ipow(struct testoasterror* test)
 		++num;
 	}
 	while(num > max);
+
+	testoasterror(test, 1);
+}
+
+// empiric test
+void test_iatan2(struct testoasterror* test)
+{
+	int32_t x;
+	int32_t y;
+	int32_t ret;
+	double real;
+
+	for (uint32_t angle = 0; angle < 360; ++angle)
+	{
+		x = 10000 * cos((angle * 2 * M_PI) / 360);
+		y = 10000 * sin((angle * 2 * M_PI) / 360);
+
+		ret = iatan2(x, y);
+		real = (atan2(x, y) * 180) / M_PI;
+
+		if (real < 0)
+		{
+			real += 360;
+		}
+
+		if (abs64(ret - floor(real)) > 1)
+		{
+			testoasterror_fail(test);
+		}
+	}
 
 	testoasterror(test, 1);
 }
