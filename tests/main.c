@@ -4,7 +4,7 @@
 #include "tests.c"
 
 #define COUNT_RESULTS 100
-#define COUNT_FUNCS 6
+#define COUNT_FUNCS 7
 
 int main()
 {
@@ -18,6 +18,7 @@ int main()
 		test_isqrt,
 		test_icbrt,
 		test_ipow,
+		test_iatan2,
 	};
 
 	struct testoasterror test;
