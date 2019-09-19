@@ -257,56 +257,76 @@ uint32_t iatan2(int32_t x, int32_t y)
 	// atan2 approximation
 	if (ux > uy)
 	{
-		degree = (uy * 45) / ux;
+		if (ux != 0)
+		{
+			degree = (uy * 45) / ux;
+		}
+		else
+		{
+			degree = 90;
+		}
+
 		octant |= 0x04;
 	}
 	else
 	{
-		degree = (ux * 45) / uy;
+		if (uy != 0)
+		{
+			degree = (ux * 45) / uy;
+		}
+		else
+		{
+			degree = 0;
+		}
 	}
 
 	tempdegree = degree;
 
-	if (tempdegree > 22)
+	if (tempdegree > 23)
 	{
-		if (tempdegree <= 44)
+		if (tempdegree < 43)
 		{
 			comp++;
 		}
 
-		if (tempdegree <= 41)
+		if (tempdegree < 41)
 		{
 			comp++;
 		}
 
-		if (tempdegree <= 37)
+		if (tempdegree < 37)
 		{
 			comp++;
 		}
 
-		if (tempdegree <= 32)
+		if (tempdegree < 35)
+		{
+			comp++;
+		}
+
+		if (tempdegree < 26)
 		{
 			comp++;
 		}
 	}
 	else
 	{
-		if (tempdegree >= 2)
+		if (tempdegree > 2)
 		{
 			comp++;
 		}
 
-		if (tempdegree >= 6)
+		if (tempdegree > 6)
 		{
 			comp++;
 		}
 
-		if (tempdegree >= 10)
+		if (tempdegree > 10)
 		{
 			comp++;
 		}
 
-		if (tempdegree >= 15)
+		if (tempdegree > 13)
 		{
 			comp++;
 		}
