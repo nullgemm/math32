@@ -170,4 +170,26 @@ void test_iatan2(struct testoasterror* test)
 	testoasterror(test, 1);
 }
 
+void test_isin(struct testoasterror* test)
+{
+	for (double i = 0; i < 32768; ++i)
+	{
+		if (abs64((sin(i * (2 * M_PI) / 32768.0) * 4096) - isin(i)) > 12)
+		{
+			testoasterror_fail(test);
+		}
+	}
+}
+
+void test_icos(struct testoasterror* test)
+{
+	for (double i = 0; i < 32768; ++i)
+	{
+		if (abs64((cos(i * (2 * M_PI) / 32768.0) * 4096) - icos(i)) > 12)
+		{
+			testoasterror_fail(test);
+		}
+	}
+}
+
 #endif

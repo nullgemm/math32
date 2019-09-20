@@ -360,3 +360,40 @@ uint32_t iatan2(int32_t x, int32_t y)
 
 	return degree;
 }
+
+// input on 2^15 = 32768 units
+// output on 2^12 = 4096 units
+int32_t isin(int32_t x)
+{
+    int32_t c;
+	int32_t y;
+
+    c = x << 17;
+    x -= 8192;
+    x <<= 18;
+    x >>= 18;
+	x *= x;
+    x >>= 12;
+    y = 19900 - ((x * 3516) >> 14);
+    y = 4096 - ((x * y) >> 16);
+
+    return (c >= 0) ? y : -y;
+}
+
+// input on 2^15 = 32768 units
+// output on 2^12 = 4096 units
+int32_t icos(int32_t x)
+{
+    int32_t c;
+	int32_t y;
+
+    c = (x + 8192) << 17;
+    x <<= 18;
+    x >>= 18;
+	x *= x;
+    x >>= 12;
+    y = 19900 - ((x * 3516) >> 14);
+    y = 4096 - ((x * y) >> 16);
+
+    return (c >= 0) ? y : -y;
+}
