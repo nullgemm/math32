@@ -146,22 +146,14 @@ void test_iatan2(struct testoasterror* test)
 	int32_t x;
 	int32_t y;
 	int32_t ret;
-	double real;
 
-	for (uint32_t angle = 0; angle < 360; ++angle)
+	for (int32_t angle = 0; angle < 0x8000; ++angle)
 	{
-		x = 10000 * cos((angle * 2 * M_PI) / 360);
-		y = 10000 * sin((angle * 2 * M_PI) / 360);
-
+		x = 10000 * cos((angle * 2 * M_PI) / 0x8000);
+		y = 10000 * sin((angle * 2 * M_PI) / 0x8000);
 		ret = iatan2(x, y);
-		real = (atan2(x, y) * 180) / M_PI;
 
-		if (real < 0)
-		{
-			real += 360;
-		}
-
-		if (abs64(ret - floor(real)) > 1)
+		if (abs64(ret - angle) > 1)
 		{
 			testoasterror_fail(test);
 		}

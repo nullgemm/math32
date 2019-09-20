@@ -226,174 +226,98 @@ int32_t ipow(int32_t base, uint8_t exp)
 	}
 }
 
+// output on 0x8000 = 32768 units
 uint32_t iatan2(int32_t x, int32_t y)
 {
-	uint8_t tempdegree;
-	uint8_t octant = 0;
-	uint8_t comp = 0;
+	int32_t t;
+	int32_t t2;
+	int32_t phi;
+	int32_t dphi;
 
-	uint32_t degree;
-	uint32_t ux;
-	uint32_t uy;
-
-	// prepare x
-	if (x < 0)
+	if (y == 0)
 	{
-		octant |= 0x01;
-		x = -x;
+		if (x >= 0)
+		{
+			return 0;
+		}
+		else
+		{
+			return 0x4000;
+		}
 	}
 
-	ux = x;
+	phi = 0;
 
-	// prepare y
 	if (y < 0)
 	{
-		octant |= 0x02;
+		x = -x;
 		y = -y;
+		phi += 4;
 	}
 
-	uy = y;
-
-	// atan2 approximation
-	if (ux > uy)
+	if (x <= 0)
 	{
-		if (ux != 0)
-		{
-			degree = (uy * 45) / ux;
-		}
-		else
-		{
-			degree = 90;
-		}
-
-		octant |= 0x04;
+		t = x;
+		x = y;
+		y = -t;
+		phi += 2;
 	}
-	else
+
+	if (x <= y)
 	{
-		if (uy != 0)
-		{
-			degree = (ux * 45) / uy;
-		}
-		else
-		{
-			degree = 0;
-		}
+		t = y - x;
+		x = x + y;
+		y = t;
+		phi += 1;
 	}
 
-	tempdegree = degree;
+	phi *= 0x4000 / 4;
 
-	if (tempdegree > 23)
-	{
-		if (tempdegree < 43)
-		{
-			comp++;
-		}
+	t = (y << 15) / x;
+	t2 = -(t * t) >> 15;
+	dphi = 0x0470;
+	dphi = 0x1029 + (t2 * dphi >> 15);
+	dphi = 0x1F0B + (t2 * dphi >> 15);
+	dphi = 0x364C + (t2 * dphi >> 15);
+	dphi = 0xA2FC + (t2 * dphi >> 15);
+	dphi = (dphi * t) >> 15;
 
-		if (tempdegree < 41)
-		{
-			comp++;
-		}
-
-		if (tempdegree < 37)
-		{
-			comp++;
-		}
-
-		if (tempdegree < 35)
-		{
-			comp++;
-		}
-
-		if (tempdegree < 26)
-		{
-			comp++;
-		}
-	}
-	else
-	{
-		if (tempdegree > 2)
-		{
-			comp++;
-		}
-
-		if (tempdegree > 6)
-		{
-			comp++;
-		}
-
-		if (tempdegree > 10)
-		{
-			comp++;
-		}
-
-		if (tempdegree > 13)
-		{
-			comp++;
-		}
-	}
-
-	degree += comp;
-
-	if (octant & 0x04)
-	{
-		degree = 90 - degree;
-	}
-
-	if (octant & 0x02)
-	{
-		if (octant & 0x01)
-		{
-			degree = 180 + degree;
-		}
-		else
-		{
-			degree = 180 - degree;
-		}
-	}
-	else
-	{
-		if (octant & 0x01)
-		{
-			degree = (360 - degree);
-		}
-	}
-
-	return degree;
+	return phi + ((dphi + 4) >> 3);
 }
 
 // input on 2^15 = 32768 units
 // output on 2^12 = 4096 units
 int32_t isin(int32_t x)
 {
-    int32_t c;
+	int32_t c;
 	int32_t y;
 
-    c = x << 17;
-    x -= 8192;
-    x <<= 18;
-    x >>= 18;
+	c = x << 17;
+	x -= 8192;
+	x <<= 18;
+	x >>= 18;
 	x *= x;
-    x >>= 12;
-    y = 19900 - ((x * 3516) >> 14);
-    y = 4096 - ((x * y) >> 16);
+	x >>= 12;
+	y = 19900 - ((x * 3516) >> 14);
+	y = 4096 - ((x * y) >> 16);
 
-    return (c >= 0) ? y : -y;
+	return (c >= 0) ? y : -y;
 }
 
 // input on 2^15 = 32768 units
 // output on 2^12 = 4096 units
 int32_t icos(int32_t x)
 {
-    int32_t c;
+	int32_t c;
 	int32_t y;
 
-    c = (x + 8192) << 17;
-    x <<= 18;
-    x >>= 18;
+	c = (x + 8192) << 17;
+	x <<= 18;
+	x >>= 18;
 	x *= x;
-    x >>= 12;
-    y = 19900 - ((x * 3516) >> 14);
-    y = 4096 - ((x * y) >> 16);
+	x >>= 12;
+	y = 19900 - ((x * 3516) >> 14);
+	y = 4096 - ((x * y) >> 16);
 
-    return (c >= 0) ? y : -y;
+	return (c >= 0) ? y : -y;
 }
